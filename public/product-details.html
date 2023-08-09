@@ -1,0 +1,92 @@
+ <!-- page1.html -->
+ <!DOCTYPE html>
+ <html>
+ <head>
+   <title>Page 3</title>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+ </head>
+ <body>
+   <div>
+    <h1 class="text-center" style="margin-top: 20px; font-weight: 700; background: linear-gradient(to bottom right,#3d27ba, #75e68f); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AUTHENTIGO</h1>
+   
+     <form id="getAllProductsForm" style="text-align: center; margin-top: 40px;">
+     <button id="viewButton" type="submit" style="background-color: #228B22; border: #228B22; padding: 15px; color: white;">View product details</button>
+ </form>
+
+  <!-- <div class="container-fluid" style="background-color: green;">
+    <div class="row">
+      <div class="col-12 text-center">
+        <h5 class="mb-3 mb-lg-0">ID: <span>${product.id.toString()}</span></h5>
+        <h1 class="mb-4 mb-lg-0">Name: <span>${product.product_name}</span></h1>
+      </div>
+    </div>
+  </div> -->
+ <div id="productInfo">
+
+     <!-- Product information will be displayed here -->
+   </div>
+   <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+   <script>
+     document.getElementById('getAllProductsForm').addEventListener('submit', async function (event) {
+       event.preventDefault();
+       const viewButton = document.getElementById('viewButton');
+       viewButton.style.display = 'none';
+       // Fetch all product details from the blockchain
+       //const pid = 1;
+        
+       const urlParams = new URLSearchParams(window.location.search);
+const productId = urlParams.get('product_id');
+console.log(productId);
+       try {
+       
+         const response = await fetch('/get-all-products', {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({ pid: productId })
+         });
+ 
+         if (!response.ok) {
+           throw new Error('Failed to fetch product details');
+         }
+ 
+         const allProducts = await response.json();
+         displayProductInfo(allProducts);
+       } catch (error) {
+         console.error('Error retrieving product information:', error.message);
+         // Display an error message if needed  #311c8c #1e0c6e
+       }
+     });
+ 
+     function displayProductInfo(product) {
+       const productInfoDiv = document.getElementById('productInfo');
+       productInfoDiv.innerHTML = `
+       <div class="container-sm d-flex justify-content-center align-items-center" style="background: linear-gradient(to top right,#7056ff, #75e68f); padding: 30px; margin: auto;">
+  <div style="color: black; margin: auto;">
+  <h4 style="padding-bottom: 8px;">Product ID: <span>${product.id.toString()}</span></h4>
+  <h4 style="padding-bottom: 8px;">Name: <span>${product.product_name}</span></h4>
+  <h4 style="padding-bottom: 8px;">Manufactury: <span>${product.mcompany_name}</span></h4>
+  <h4 style="padding-bottom: 8px;">Manufactured Location: <span>${product.mlocation}</span></h4>
+  <h4 style="padding-bottom: 8px;">Date of Manufacturing: <span>${product.dom}</span></h4>
+  <h4 style="padding-bottom: 8px;">Date of Expiry: <span>${product.doe}</span></h4>
+  <h4 style="padding-bottom: 8px;">Retailer: <span>${product.rcompany_name}</span></h4>
+  <h4 style="padding-bottom: 8px;">Retailer Location: <span>${product.rlocation}</span></h4>
+  <h4>Date of Purchase: <span>${product.dop}</span></h4>
+</div>
+</div>
+<br><br>  
+         <div class="container text-center p-4" style="margin-top:50px; border: 4px solid green; max-width: 500px; margin: 0 auto;">
+          <img src="/assets/v2.png" alt="" />
+      <h5>This product is Verified by <span style="margin-top: 20px; font-weight: 700; background: linear-gradient(to bottom right,#3d27ba, #75e68f); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> Authentigo </span></h5>
+      </div>
+  
+      
+       `;
+     }
+   </script>
+ </div>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ </body>
+ </html>
+ 
